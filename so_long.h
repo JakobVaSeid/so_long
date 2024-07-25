@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jseidere <jseidere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/01 10:27:39 by jseidere          #+#    #+#             */
-/*   Updated: 2023/12/14 17:44:31 by jseidere         ###   ########.fr       */
+/*   Created: 2024/06/12 15:04:30 by jseidere          #+#    #+#             */
+/*   Updated: 2024/06/20 16:23:49 by jseidere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,86 +14,93 @@
 # define SO_LONG_H
 
 # include <mlx.h>
-# include <stdlib.h>
 # include <stdio.h>
-# include "ft_printf/ft_printf.h"
-# include "ft_printf/libft/libft.h"
-# include "get_next_line.h"
+# include <stdlib.h>
+# include <get_next_line/get_next_line.h>
+# include <ft_printf/ft_printf.h>
+# include <ft_printf/libft/libft.h>
 
-# define UP     119
-# define DOWN   115
-# define LEFT   97
-# define RIGHT  100
-# define ESC    65307
+# define UP         119
+# define DOWN       115
+# define LEFT       97
+# define RIGHT      100
+# define SPACE      32
+# define ESC        65307
 
-# define IMG_HEIGHT			40
-# define IMG_WIDTH			40
+# define IMG_WALL    "textures/wall.xpm"
+# define IMG_FLOOR   "textures/floor.xpm"
+# define IMG_COIN    "textures/coin.xpm"
+# define IMG_PLAYER  "textures/player.xpm"
+# define IMG_JMP     "textures/jump.xpm"
+# define IMG_DOOR    "textures/door.xpm"
+# define IMG_OPENDO  "textures/fwechsle.xpm"
 
-# define WALL				'1'
-# define FLOOR 				'0'
-# define COIN	  			'C'
-# define PLAYER				'P'
-# define DOOR 		 		'E'
-
-# define WALL_XPM			"textures/wall.xpm"
-# define FLOOR_XPM			"textures/floor.xpm"
-# define COIN_XPM			"textures/coin.xpm"
-# define DOOR_XPM			"textures/door.xpm"
-# define PLAYER_XPM			"textures/player.xpm"
-# define OPEN_DOOR_XPM		"textures/fwechsle.xpm"
-
-typedef struct s_img
+typedef struct s_game
 {
-	void	*xpm_ptr;
-	int		x;
-	int		y;
-}	t_img;
-
-typedef struct s_point
-{
-	int			x;
-	int			y;
-}				t_point;
-
-typedef struct s_vars
-{
-	void	*mlx_ptr;
-	void	*win;
-	t_img	wall;
-	t_img	door;
-	t_img	open_door;
-	t_img	floor;
-	t_img	player;
-	t_img	coin;
-	t_point	playermove;
-	t_point	flood;
-	int		map_columns;
-	int		map_rows;
-	int		map_coins;
-	int		map_exit;
-	int		map_player;
-	int		movements;
 	char	**map;
-	char	**map2;
-}	t_game;
+	char	**map_temp;
+	int		*mlx;
+	int		*win;
+	int		fd;
+	int		rows;
+	int		cols;
+	int		coins;
+	int		door;
+	int		player;
+	int		player_x;
+	int		player_y;
+	int		moves;
+	int		flood_fill_x;
+	int		flood_fill_y;
+	void	*player_img;
+	void	*jmp_img;
+	void	*wall_img;
+	void	*floor_img;
+	void	*coin_img;
+	void	*door_img;
+	void	*opendoor_img;
+}				t_game;
 
-void	init_map(t_game *game, char *argv);
-int		free_all(t_game *so_long);
-void	free_map2(t_game *so_long);
-int		ft_error(char *message, t_game *so_long);
+////////////////////////////////////////////
+/////////////////FUNCTIONS/////////////////
+//////////////////////////////////////////
 
-void	check_map(t_game *so_long);
-void	check_column(t_game *so_long);
-void	check_row(t_game *so_long);
-void	count_parameter(t_game *so_long);
-void	verify_map_parameters(t_game *so_long);
+//so_long.c
+void	copy_map(char **map, char **map_temp, int rows);
+void	free_map_temp(char **map_temp, int rows);
 
-void	init_sprites(t_game *so_long);
-int		render_map(t_game *so_long);
-t_img	load_xpm(void *mlx, char *filename, t_game *so_long);
-void	place_img(t_game *so_long, int y, int x);
-void	movement(t_game *so_long, int y, int x);
-int		keypress(int key, t_game *so_long);
-void	check_path(t_game *so_long);
+//free.c
+void	free_images(t_game *so_long);
+void	free_map(t_game *so_long);
+void	ft_error(char *str, t_game *so_long);
+void	free_all(t_game *so_long);
+int		free_success(t_game *so_long);
+
+//create_map.c
+void	place_images(t_game *so_long);
+void	scan_rows(t_game *so_long, char *str, int i);
+void	scan_map(t_game *so_long, char **str);
+
+//read_map.c
+int		check_for_newline(char *str);
+void	double_free(char *s1, char *s2, int fd, t_game *so_long);
+void	single_free(char *s1, t_game *so_long);
+char	*get_map_temp(t_game *so_long, char *map_temp, int fd);
+void	init_map(t_game *so_long, char *map_temp);
+
+//init_game.c
+void	init_var(t_game *so_long);
+void	init_img(t_game *so_long);
+void	init_game(t_game *so_long, char **argv);
+
+//validate.c
+void	valid_map(t_game *so_long);
+void	check_path(t_game *so_long, char **map_tmp, int y, int x);
+
+//movement.c
+void	move_left(t_game *so_long);
+void	move_right(t_game *so_long);
+void	move_up(t_game *so_long);
+void	move_down(t_game *so_long);
 
 #endif

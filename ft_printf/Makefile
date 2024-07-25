@@ -23,12 +23,12 @@ $(NAME): $(OBJS)
 # Remove object files
 clean:
 	@$(RM) -rf $(OBJS)
-	@make clean --no-print-directory -C $(LIBFT)
+	@make clean -sC $(LIBFT)
 
 # Remove object files and rush-02
 fclean: clean
 	@$(RM) -rf $(OBJS)
-	@make clean --no-print-directory -C $(LIBFT)
+	@make clean -sC $(LIBFT)
 	@$(RM) -rf $(NAME)
 	@$(RM) -rf $(LIBFT)/libft.a
 

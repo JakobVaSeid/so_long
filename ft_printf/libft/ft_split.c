@@ -6,7 +6,7 @@
 /*   By: jseidere <jseidere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 12:29:06 by jseidere          #+#    #+#             */
-/*   Updated: 2023/12/11 16:12:27 by jseidere         ###   ########.fr       */
+/*   Updated: 2024/06/18 17:46:16 by jseidere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,15 @@ static size_t	count_words(char const *s, char c)
 	return (count);
 }
 
-static void	ft_free(char **result, int word)
+static void	ft_free(char **result, int wc)
 {
-	int	f;
+	int	i;
 
-	f = 0;
-	while (f < word)
+	i = 0;
+	while (i < wc)
 	{
-		free(result[f]);
-		f++;
+		free(result[i]);
+		i++;
 	}
 	free(result);
 }
@@ -87,3 +87,15 @@ char	**ft_split(char const *s, char c)
 		return (NULL);
 	return (result);
 }
+
+/* #include <string.h>
+#include <stdio.h>
+int main ()
+{
+	char *test = "     Wie    viele Wörter hat dieser String?    ";
+	
+	//printf("Dieser String hat %li Wörter\n", count_words(test, ' ')); 
+	//printf("Das erste Wort ist %li lang", wordlen(test, ' ')); 
+	printf("%s", *ft_split(test, ' '));
+	
+} */

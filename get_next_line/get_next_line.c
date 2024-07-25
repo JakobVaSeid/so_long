@@ -6,11 +6,18 @@
 /*   By: jseidere <jseidere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:42:52 by jseidere          #+#    #+#             */
-/*   Updated: 2023/12/13 19:23:35 by jseidere         ###   ########.fr       */
+/*   Updated: 2024/06/20 15:50:38 by jseidere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+char	*double_str_free(char *s1, char *s2)
+{
+	free(s1);
+	free(s2);
+	return (0);
+}
 
 char	*return_function(int index, char **stash)
 {
@@ -34,11 +41,13 @@ char	*return_function(int index, char **stash)
 	len = ft_strlen(*stash) - index;
 	result = *stash;
 	*stash = ft_substr(*stash, index, len);
+	if (!*stash)
+		return (double_str_free(result, *stash));
 	result[index] = '\0';
 	return (result);
 }
 
-char	*get_result(char **stash, char *buffer, int fd)
+char	*get_line(char **stash, char *buffer, int fd)
 {
 	char	*new_stash;
 	char	*result;
@@ -53,6 +62,11 @@ char	*get_result(char **stash, char *buffer, int fd)
 			return (return_function(bytesread, stash));
 		buffer[bytesread] = '\0';
 		new_stash = ft_strjoin(*stash, buffer);
+		if (!new_stash)
+		{
+			free(*stash);
+			return (NULL);
+		}
 		free(*stash);
 		*stash = new_stash;
 		next_line = ft_strchr(*stash, '\n');
@@ -69,35 +83,41 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = (char *)malloc((BUFFER_SIZE + 1) * sizeof(buffer));
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
+	{
+		free(stash);
 		return (NULL);
+	}
 	if (!stash)
+	{
 		stash = ft_strdup("");
-	result = get_result(&stash, buffer, fd);
+		if (!stash)
+		{
+			free(buffer);
+			return (NULL);
+		}
+	}
+	result = get_line(&stash, buffer, fd);
 	free(buffer);
 	return (result);
 }
-
-/* int	main()
-{
-	char *str;
-	str = get_next_line(0);
-	free(str);
-	return (0);
-} */
-
-/* int main()
+/* #include <stdio.h>
+int main()
 {
 	int i = 1;
+
 	int fd = open("text.txt", O_RDONLY);
+	
 	if (fd < 0)
 	{
 		perror("Fehler beim Öffnen der Datei");
 		return 1;
 	}
+
 	char *line;
-	while (i <= 20)
+	
+	while (i <= 12)
 	{
 		line = get_next_line(fd);
 		if (line)
@@ -107,7 +127,6 @@ char	*get_next_line(int fd)
 		}
 		else
 		{
-			break;
 			printf("%d = Zeile nicht verfügbar\n", i);
 		}
 		printf("________________________\n");
@@ -116,33 +135,28 @@ char	*get_next_line(int fd)
 	close(fd);
 	return 0;
 } */
-/* #include <stdio.h>
-int main()
+/* 
+#include <stdio.h>
+int main ()
 {
-	//int i = 1;
-	int fd = open("newline.txt", O_RDONLY);
-	if (fd < 0)
-	{
-		perror("Fehler beim Öffnen der Datei");
-		return 1;
-	}
-	char *line;
+	int fd;
+	int i;
 
-	line = get_next_line(fd);
-	while (line)
+	i = 0;
+	//char *test = get_buffer(fd);
+	
+	fd = open ("text.txt", O_RDONLY);
+	
+	while(i < 27)
 	{
-		printf("%s", line);
-		free(line);
-		line = get_next_line(fd);
+		printf("%s\n", get_next_line(fd));
+		i++;
 	}
-		// else
-		// {
-		// 	break;
-		// 	printf("%d = Zeile nicht verfügbar\n", i);
-		// }
-		// printf("________________________\n");
-		//i++;
+	//test = get_next_line(fd);
+	
+	//printf("%s\n", get_next_line(fd));
 
-	close(fd);
-	return 0;
+	close (fd);
+
+	//return (0);
 } */

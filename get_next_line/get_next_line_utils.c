@@ -6,13 +6,14 @@
 /*   By: jseidere <jseidere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 11:29:47 by jseidere          #+#    #+#             */
-/*   Updated: 2023/11/30 18:13:08 by jseidere         ###   ########.fr       */
+/*   Updated: 2024/06/18 14:03:14 by jseidere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <unistd.h>
+#include <stdlib.h>
 
-int	ft_strlen(const char *str)
+size_t	ft_strlen(const char *str)
 {
 	int	i;
 
@@ -32,7 +33,7 @@ char	*ft_strdup(const char *s)
 	len = ft_strlen(s);
 	ptr = (char *) malloc(sizeof(char) * (len + 1));
 	if (ptr == 0)
-		return (0);
+		return (NULL);
 	while (s[i])
 	{
 		ptr[i] = s[i];
@@ -72,8 +73,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 char	*ft_strchr(const char *s, int c)
 {
-	if (s == 0)
-		return (0);
 	if ((char)c == '\0')
 	{
 		while (*s)

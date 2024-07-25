@@ -6,18 +6,16 @@
 /*   By: jseidere <jseidere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 11:59:34 by jseidere          #+#    #+#             */
-/*   Updated: 2023/12/11 16:12:55 by jseidere         ###   ########.fr       */
+/*   Updated: 2023/09/20 16:01:48 by jseidere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_strlen(const char *str)
+size_t	ft_strlen(const char *str)
 {
-	int	i;
+	size_t	i;
 
-	if (str == NULL)
-		return (0);
 	i = 0;
 	while (str[i] != '\0')
 		i++;

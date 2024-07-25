@@ -6,16 +6,16 @@
 /*   By: jseidere <jseidere@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 11:30:41 by jseidere          #+#    #+#             */
-/*   Updated: 2023/12/18 12:10:27 by jseidere         ###   ########.fr       */
+/*   Updated: 2024/06/20 16:33:04 by jseidere         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-#include "get_next_line.h"
 
 int	check_for_newline(char *str)
 {
-	if (str[ft_strlen(str) - 1] == '\n')
+	if (str && ft_strlen(str) > 0 \
+		&& str[ft_strlen(str) - 1] == '\n')
 		return (0);
 	else
 		return (1);
@@ -50,16 +50,16 @@ char	*get_map_temp(t_game *so_long, char *map_temp, int fd)
 	while (1)
 	{
 		line_temp = get_next_line(fd);
-		if (line_temp == NULL)
+		if (!line_temp)
 			single_free(map_temp, so_long);
-		if (line_temp[0] == '\n')
+		if (line_temp && line_temp[0] == '\n')
 			double_free(line_temp, map_temp, fd, so_long);
 		tmp = ft_strjoin(map_temp, line_temp);
 		if (!tmp)
-			free_all(so_long);
+			double_free(map_temp, line_temp, fd, so_long);
 		free(map_temp);
 		map_temp = tmp;
-		so_long->map_rows++;
+		so_long->rows++;
 		if (check_for_newline(line_temp) == 1)
 		{
 			free(line_temp);
@@ -73,28 +73,29 @@ char	*get_map_temp(t_game *so_long, char *map_temp, int fd)
 
 void	init_map(t_game *so_long, char *argv)
 {
-	int		fd;
 	char	*map_temp;
 	char	*filextension;
 
 	filextension = ft_strrchr(&argv[1], '.');
-	if (filextension && ft_strncmp(filextension, ".ber", 4) == 0)
+	if (filextension && (ft_strncmp(filextension, ".ber", 4) == 0 \
+		&& ft_strlen(filextension) == 4))
 	{
-		fd = open(argv, O_RDONLY);
-		if (fd < 0)
+		so_long->fd = open(argv, O_RDONLY);
+		if (so_long->fd < 0)
 			ft_error("Couldn't read map!", so_long);
 		map_temp = ft_strdup("");
 		if (!map_temp)
-			free_all(so_long);
-		map_temp = get_map_temp(so_long, map_temp, fd);
+			ft_error("Error!", so_long);
+		map_temp = get_map_temp(so_long, map_temp, so_long->fd);
 		if (!map_temp)
-			free_all(so_long);
-		close(fd);
+			single_free(map_temp, so_long);
+		if (close(so_long->fd))
+			single_free(map_temp, so_long);
 		so_long->map = ft_split(map_temp, '\n');
 		if (so_long->map == NULL)
-			free_all(so_long);
+			single_free(map_temp, so_long);
 		free(map_temp);
 	}
 	else
-		ft_error("Wrong fileextension!", so_long);
+		ft_error("Error!", so_long);
 }

@@ -36,9 +36,9 @@ ESC	Quit the game
 - Bonus: The door opens visibly once all coins are collected
 
 🧠 What I Learned
--Working with MiniLibX
--Basic game logic in C
--Handling 2D arrays and events
--Implementing bonus features
--Parsing from map
+- Working with MiniLibX
+- Basic game logic in C
+- Handling 2D arrays and events
+- Implementing bonus features
+- Parsing from map
 

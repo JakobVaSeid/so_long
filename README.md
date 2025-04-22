@@ -9,6 +9,8 @@ The goal is to navigate through a maze, collect coins, and ultimately reach the 
 Clone the repository:
 ```
 git clone git@github.com:JakobVaSeid/so_long.git
+```
+```
 cd so_long
 ```
 

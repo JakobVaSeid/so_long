@@ -1,18 +1,26 @@
 🗺️ So Long
-42 Project – So Long is a simple 2D game created using the MiniLibX (MLX) library. 
+
+42 Project – So Long 
+is a simple 2D game created using the MiniLibX (MLX) library. 
 The goal is to navigate through a maze, collect coins, and ultimately reach the exit portal.
 
 
 🔧 Installation
 Clone the repository:
-git clone <your-repo-link>
+```
+git clone 
 cd so_long
+```
 
 Build the project:
+```
 make
+```
 
 Run the game:
+```
 ./so_long maps/map.ber
+```
 
 🕹️ Controls
 Key	Action
